@@ -1,0 +1,8 @@
+#!/bin/bash
+parameter=${1}
+
+if [ -z "${parameter}" ]; then
+    git diff --name-status || exit 1
+else
+    git diff --name-status ${parameter} || exit 1
+fi

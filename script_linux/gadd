@@ -1,0 +1,18 @@
+#!/bin/bash
+# git add file
+ME=$(basename $0)
+
+function usage() {
+    echo "Usage: ${ME} [file1] [file2] ..."
+    exit 1
+}
+
+file=${1}
+
+if [ -z "${file}" ]; then
+    usage
+fi
+
+for f in $@; do
+    git add $f
+done

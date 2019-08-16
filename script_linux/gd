@@ -1,0 +1,15 @@
+#!/bin/bash
+ME=$(basename $0)
+
+function usage() {
+    echo "Usage: ${ME} [parameter]"
+    exit 1
+}
+
+parameter=${1}
+
+if [ -z "${parameter}" ]; then
+    usage
+fi
+
+git diff ${parameter} || exit 1

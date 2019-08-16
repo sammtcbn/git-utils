@@ -1,0 +1,15 @@
+#!/bin/bash
+# git commit current repository
+ME=$(basename $0)
+
+function usage() {
+    echo "Usage: ${ME} [message]"
+}
+
+msg=${@}
+
+if [ -z "${msg}" ]; then
+    git commit
+else
+    git commit -m "${msg}"
+fi

@@ -1,0 +1,15 @@
+#!/bin/bash
+ME=$(basename $0)
+
+function usage() {
+    echo "Usage: ${ME} [commit]"
+    exit 1
+}
+
+commit=${1}
+
+if [ -z "${1}" ]; then
+    usage
+fi
+
+git --no-pager diff ${commit}^ ${commit} || exit 1
