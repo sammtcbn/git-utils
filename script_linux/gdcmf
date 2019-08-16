@@ -14,4 +14,4 @@ else
     commit=${1}
 fi
 
-git --no-pager diff ${commit}^ ${commit} --name-only || exit 1
+git --no-pager diff ${commit}^ ${commit} --name-status || exit 1
