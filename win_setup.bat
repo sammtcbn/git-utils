@@ -1,2 +1,2 @@
-xcopy /Y win_script\*.* C:\Users\%UserName%\AppData\Local\Microsoft\WindowsApps
+xcopy /Y script_win\*.* C:\Users\%UserName%\AppData\Local\Microsoft\WindowsApps
 pause
