@@ -1,0 +1,4 @@
+#!/bin/bash
+# Show current branch
+# refer to https://stackoverflow.com/questions/6245570/how-to-get-the-current-branch-name-in-git
+git rev-parse --abbrev-ref HEAD
