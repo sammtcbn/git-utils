@@ -1,0 +1,20 @@
+#!/bin/bash
+# Git remove multiple files and folders
+ME=$(basename $0)
+
+function usage() {
+    echo "Usage: ${ME} [file1] [file2] [folder1] [folder2] ..."
+    exit 1
+}
+
+if [ -z "${1}" ]; then
+    usage
+fi
+
+for fn in $@; do
+    if [[ -d ${fn} ]]; then
+        git rm -rf ${fn} || exit 1
+    elif [[ -f ${fn} ]]; then
+        git rm ${fn} || exit 1
+    fi
+done
