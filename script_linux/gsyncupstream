@@ -1,15 +1,19 @@
 #!/bin/bash
-git checkout master || exit 1
+currbranch=$(git rev-parse --abbrev-ref HEAD)
+read -p "git pull upstream master to current branch - $currbranch ? [y/n]" ins
+if [ "${ins}" != "y" ] && [ "${ins}" != "Y" ]; then
+    exit 0
+fi
+
 git pull upstream master || exit 1
 
 ins=n
-echo "local master sync ... done"
-read -p "git push origin master ? [y/n]" ins
+read -p "git push origin $currbranch ? [y/n]" ins
 
 if [ "${ins}" != "y" ] && [ "${ins}" != "Y" ]; then
     exit 0
 fi
 
-git push origin master || exit 1
+git push origin $currbranch || exit 1
 
 echo "done"
