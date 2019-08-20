@@ -1,12 +1,27 @@
 #!/bin/bash
-# Show current branch
+# Show current branch or switch to a branch
 # refer to https://stackoverflow.com/questions/6245570/how-to-get-the-current-branch-name-in-git
 
-# method-1
-git rev-parse --abbrev-ref HEAD
+ME=$(basename $0)
 
-# method-2
-#git branch | grep \* | cut -d ' ' -f2
+function usage() {
+    echo "Usage: ${ME} - show current branch"
+    echo "Usage: ${ME} [branch name] - switch to branch"
+    exit 1
+}
 
-# method-3
-# git symbolic-ref --short HEAD
+branchname=${1}
+
+if [ -z "${branchname}" ]; then
+    # method-1
+    git rev-parse --abbrev-ref HEAD
+
+    # method-2
+    #git branch | grep \* | cut -d ' ' -f2
+
+    # method-3
+    # git symbolic-ref --short HEAD
+else
+    git checkout ${branchname}
+    git branch -l
+fi
