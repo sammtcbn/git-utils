@@ -1,1 +1,1 @@
-git log --summary
+git log --name-status
