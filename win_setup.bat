@@ -7,4 +7,9 @@
 @set currdir=%~dp0
 @xcopy /Y %currdir%\script_win\*.* C:\Users\%UserName%\AppData\Local\Microsoft\WindowsApps
 
+git config --global color.diff auto
+git config --global color.status auto
+git config --global color.branch auto
+git config --global color.log auto
+
 pause
