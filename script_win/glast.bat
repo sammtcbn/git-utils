@@ -1,1 +1,1 @@
-git log -1 HEAD
+git log -1 --name-status HEAD
