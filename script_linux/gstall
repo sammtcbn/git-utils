@@ -2,7 +2,7 @@
 TOPDIR=$(pwd)
 
 if [ -f .git/config ]; then
-    git status
+    git status --short
 fi
 
 for D in *
@@ -10,7 +10,7 @@ do
     if [ -d "${TOPDIR}/${D}" ]; then
         if [ -f ${TOPDIR}/${D}/.git/config ]; then
             echo ${D}
-            cd ${TOPDIR}/${D};git status
+            cd ${TOPDIR}/${D};git status --short
         fi
     fi
 done
