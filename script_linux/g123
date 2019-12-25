@@ -1,0 +1,4 @@
+#!/bin/bash
+git add -A || exit 1
+git commit -m "update notes" || exit 1
+git push || exit 1
