@@ -1,0 +1,82 @@
+#!/bin/bash
+TOPDIR=$(pwd)
+ME=$(basename $0)
+
+GIT_ID=
+GIT_PW=
+GIT_EMAIL=
+
+function usage() {
+    echo "Usage:"
+    echo "  ${ME} [git_repository_url]"
+    echo "Example:"
+    echo "  ${ME} https://github.com/torvalds/linux.git"
+    exit 1
+}
+
+function load_config()
+{
+    if [ -f ${configfile} ]; then
+        GIT_ID=`cat ${configfile} | grep ID= | awk 'BEGIN {FS="="}; {print $2}'`
+        GIT_PW=`cat ${configfile} | grep PW= | awk 'BEGIN {FS="="}; {print $2}'`
+        GIT_EMAIL=`cat ${configfile} | grep EMAIL= | awk 'BEGIN {FS="="}; {print $2}'`
+        #echo "GIT_ID = ${GIT_ID}"
+        #echo "GIT_PW = ${GIT_PW}"
+        #echo "GIT_EMAIL = ${GIT_EMAIL}"
+    fi
+}
+
+function gc()
+{
+    url=$1
+
+    if [ -n "$GIT_ID" ] && [ -n "$GIT_PW" ]; then
+        userpass=${GIT_ID}:${GIT_PW}
+        finalurl=${url/${doname}/${userpass}@${doname}}
+    elif [ -n "$GIT_ID" ]; then
+        userpass=${GIT_ID}
+        finalurl=${url/${doname}/${userpass}@${doname}}
+    else
+        finalurl=$url
+    fi
+
+    project=$(basename "$url" ".${url##*.}")
+
+    #echo "finalurl - ${finalurl}"
+    #echo "project - ${project}"
+
+    echo ${project}.git ...
+
+    if [ ! -d "${TOPDIR}/${project}" ]; then
+        cd $TOPDIR || exit 1
+        git clone ${finalurl} || exit 1
+    else
+        cd ${TOPDIR}/${project} || exit 1
+        git pull || exit 1
+    fi
+
+    if [ -n "$GIT_ID" ]; then
+        cd ${TOPDIR}/${project} || exit 1
+        git config user.name "${GIT_ID}" || exit 1
+    fi
+
+    if [ -n "$GIT_EMAIL" ]; then
+        cd ${TOPDIR}/${project} || exit 1
+        git config user.email "${GIT_EMAIL}" || exit 1
+    fi
+}
+
+if [ -z "${1}" ]; then
+    usage
+fi
+
+url=${1}
+
+doname=$(echo $url | sed -e "s/[^/]*\/\/\([^@]*@\)\?\([^:/]*\).*/\2/")
+configfile=~/.config/.$doname
+#echo "url - $url"
+#echo "doname - $doname"
+#echo "configfile - $configfile"
+
+load_config
+gc $url
