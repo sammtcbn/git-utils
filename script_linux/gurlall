@@ -1,0 +1,16 @@
+#!/bin/bash
+TOPDIR=$(pwd)
+
+if [ -f .git/config ]; then
+    git config --get remote.origin.url
+fi
+
+for D in *
+do
+    if [ -d "${TOPDIR}/${D}" ]; then
+        if [ -f ${TOPDIR}/${D}/.git/config ]; then
+            echo ${D}
+            cd ${TOPDIR}/${D};git config --get remote.origin.url
+        fi
+    fi
+done
