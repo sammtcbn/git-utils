@@ -34,3 +34,5 @@ fi
   cmd="rm -rf \"${file}\""
   git filter-branch -f --prune-empty --tag-name-filter cat --tree-filter "${cmd}" -- --all
   git for-each-ref --format="%(refname)" refs/original/ | xargs -n 1 git update-ref -d
+  git reflog expire --all --expire=now
+  git gc --prune=now
