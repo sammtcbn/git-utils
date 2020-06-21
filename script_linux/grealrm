@@ -6,7 +6,12 @@ ME=$(basename $0)
 
 function usage() {
     echo "Usage: ${ME} [file]"
-    exit 1
+    echo "Ex:"
+    echo "  If file need to be deleted"
+    echo "     Prerequisites/Visual C++ Redistributable for Visual Studio 2013/vcredist_2013u5_x86.exe"
+    echo "  Run:"
+    echo "     ${ME} \"Prerequisites/Visual C++ Redistributable for Visual Studio 2013/vcredist_2013u5_x86.exe\""
+    exit
 }
 
 file=${@}
@@ -15,12 +20,17 @@ if [ -z "${file}" ]; then
     usage
 fi
 
-#method1
-  git filter-branch --force --tree-filter "rm -rf ${file}" -- --all
-  git filter-branch --force
-  git reflog expire --all --expire=now
-  git gc --prune=now
+#method-1
+  #git filter-branch --force --tree-filter "rm -rf ${file}" -- --all
+  #git filter-branch --force
+  #git reflog expire --all --expire=now
+  #git gc --prune=now
 
-#method2
-  #git filter-branch -f --prune-empty --tag-name-filter cat --tree-filter 'rm -rf ${file}' -- --all
-  #git for-each-ref --format="%(refname)" refs/original/ | xargs -n 1 git update-ref -d
+#method-2
+#this method work if path have space
+#ex: if file need to be deleted ,
+# Prerequisites/Visual C++ Redistributable for Visual Studio 2013/vcredist_2013u5_x86.exe
+#
+  cmd="rm -rf \"${file}\""
+  git filter-branch -f --prune-empty --tag-name-filter cat --tree-filter "${cmd}" -- --all
+  git for-each-ref --format="%(refname)" refs/original/ | xargs -n 1 git update-ref -d
