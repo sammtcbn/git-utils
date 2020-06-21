@@ -5,21 +5,22 @@
 ME=$(basename $0)
 
 function usage() {
-    echo "Usage: ${ME} [file1] [file2] [folder1] [folder2] ..."
+    echo "Usage: ${ME} [file]"
     exit 1
 }
 
-file=${1}
+file=${@}
 
 if [ -z "${file}" ]; then
     usage
 fi
 
-for f in $@; do
-    git filter-branch --force --tree-filter "rm -rf ${f}" -- --all
+#method1
+  git filter-branch --force --tree-filter "rm -rf ${file}" -- --all
+  git filter-branch --force
+  git reflog expire --all --expire=now
+  git gc --prune=now
 
-done
-
-git filter-branch --force
-git reflog expire --all --expire=now
-git gc --prune=now
+#method2
+  #git filter-branch -f --prune-empty --tag-name-filter cat --tree-filter 'rm -rf ${file}' -- --all
+  #git for-each-ref --format="%(refname)" refs/original/ | xargs -n 1 git update-ref -d
