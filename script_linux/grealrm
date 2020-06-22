@@ -4,14 +4,19 @@
 # real remove files from git repository
 ME=$(basename $0)
 
+USAGE_STR="$(cat <<EOF
+Usage: ${ME} [file]
+Ex:
+  If file need to be deleted like this with multiple space characters
+     Prerequisites/Visual C++ Redistributable for Visual Studio 2013/vcredist_2013u5_x86.exe
+  Run:
+     ${ME} "Prerequisites/Visual C++ Redistributable for Visual Studio 2013/vcredist_2013u5_x86.exe"
+EOF
+)"
+
 function usage() {
-    echo "Usage: ${ME} [file]"
-    echo "Ex:"
-    echo "  If file need to be deleted"
-    echo "     Prerequisites/Visual C++ Redistributable for Visual Studio 2013/vcredist_2013u5_x86.exe"
-    echo "  Run:"
-    echo "     ${ME} \"Prerequisites/Visual C++ Redistributable for Visual Studio 2013/vcredist_2013u5_x86.exe\""
-    exit
+    echo "$USAGE_STR"
+    exit 0
 }
 
 file=${@}
