@@ -4,6 +4,7 @@ ME=$(basename $0)
 
 GIT_ID=
 GIT_PW=
+GIT_NAME=
 GIT_EMAIL=
 
 function usage() {
@@ -19,9 +20,11 @@ function load_config()
     if [ -f ${configfile} ]; then
         GIT_ID=`cat ${configfile} | grep ID= | awk 'BEGIN {FS="="}; {print $2}'`
         GIT_PW=`cat ${configfile} | grep PW= | awk 'BEGIN {FS="="}; {print $2}'`
+        GIT_NAME=`cat ${configfile} | grep NAME= | awk 'BEGIN {FS="="}; {print $2}'`
         GIT_EMAIL=`cat ${configfile} | grep EMAIL= | awk 'BEGIN {FS="="}; {print $2}'`
         #echo "GIT_ID = ${GIT_ID}"
         #echo "GIT_PW = ${GIT_PW}"
+        #echo "GIT_NAME = ${GIT_NAME}"
         #echo "GIT_EMAIL = ${GIT_EMAIL}"
     fi
 }
@@ -55,9 +58,9 @@ function gc()
         git pull || exit 1
     fi
 
-    if [ -n "$GIT_ID" ]; then
+    if [ -n "$GIT_NAME" ]; then
         cd ${TOPDIR}/${project} || exit 1
-        git config user.name "${GIT_ID}" || exit 1
+        git config user.name "${GIT_NAME}" || exit 1
     fi
 
     if [ -n "$GIT_EMAIL" ]; then
