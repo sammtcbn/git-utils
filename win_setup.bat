@@ -12,4 +12,4 @@ git config --global color.status auto
 git config --global color.branch auto
 git config --global color.log auto
 
-pause
+@rem pause
