@@ -1,0 +1,27 @@
+#!/bin/bash
+# Rename branch
+ME=$(basename $0)
+
+function usage() {
+    echo "Usage: ${ME} [old_branch_name] [new_branch_name]"
+    exit 1
+}
+
+if [ -z "${1}" ] || [ -z "${2}" ]; then
+    usage
+fi
+
+old=${1}
+new=${2}
+
+# rename local branch
+echo git branch -m ${old} ${new}
+git branch -m ${old} ${new}
+
+# push local new branch and reset upstream branch
+echo git push origin -u ${new}
+git push origin -u ${new}
+
+# delete remote old branch
+echo git push origin --delete ${old}
+git push origin --delete ${old}
