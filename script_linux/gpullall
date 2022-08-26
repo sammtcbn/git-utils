@@ -10,7 +10,7 @@ do
     if [ -d "${TOPDIR}/${D}" ]; then
         if [ -f ${TOPDIR}/${D}/.git/config ]; then
             echo ${D}
-            cd ${TOPDIR}/${D};git pull
+            cd ${TOPDIR}/${D};git pull;git fetch --tags --all -f
         fi
     fi
 done

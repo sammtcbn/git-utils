@@ -1,3 +1,4 @@
 #!/bin/bash
-# git pull current repository
+# git pull current repository and update local tags
 git pull
+git fetch --tags --all -f
