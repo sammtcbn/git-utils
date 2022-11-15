@@ -1,4 +1,9 @@
 #!/bin/bash
 echo "git checkout master"
 git checkout master
+ret_code=$?
+if [ $ret_code != 0 ]; then
+  echo "git checkout main"
+  git checkout main
+fi
 git branch -l

@@ -22,5 +22,5 @@ if [ "${ins}" != "y" ] && [ "${ins}" != "Y" ]; then
     exit 0
 fi
 
-git reset HEAD^ --hard
-git push origin -f
+git reset --hard HEAD^
+git push origin HEAD --force
