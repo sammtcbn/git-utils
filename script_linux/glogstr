@@ -1,0 +1,15 @@
+#!/bin/bash
+ME=$(basename $0)
+
+function usage() {
+    echo "Usage: ${ME} [search_pattern]"
+    exit 1
+}
+
+str=${1}
+
+if [ -z "${1}" ]; then
+    usage
+fi
+
+git log --grep "${str}" || exit 1
