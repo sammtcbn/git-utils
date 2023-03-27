@@ -1,5 +1,5 @@
 @echo off
-set currdir=%~dp0
+set currdir=%cd%
 IF "%currdir:~-1%"=="\" SET newpath=%currdir:~0,-1%
 
 for /D %%f in (.\*) do (
