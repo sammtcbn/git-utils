@@ -3,13 +3,19 @@ ME=$(basename $0)
 
 function usage() {
     echo "Usage: ${ME} [commit]"
+    echo "       ${ME} [commit] [filename]"
     exit 1
 }
 
 commit=${1}
+fname=${2}
 
 if [ -z "${1}" ]; then
     usage
 fi
 
-git --no-pager diff ${commit}^ ${commit} || exit 1
+if [ -z "${fname}" ]; then
+    git --no-pager diff ${commit}^ ${commit} || exit 1
+else
+    git --no-pager diff ${commit}^ ${commit} ${fname} || exit 1
+fi
