@@ -1,0 +1,7 @@
+#!/bin/bash
+if [ -z "${1}" ]; then
+    git diff --check
+else
+    fn=${1}
+    git diff --check ${fn}
+fi
