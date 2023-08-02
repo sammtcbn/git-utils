@@ -1,0 +1,18 @@
+#!/bin/bash
+ME=$(basename $0)
+
+function usage() {
+    echo "Usage: ${ME} [file1] [file2] ..."
+    exit 1
+}
+
+if [ -z "${1}" ]; then
+    usage
+fi
+
+for fn in $@; do
+    echo "git checkout --ours ${fn}"
+    git checkout --ours ${fn} || exit 1
+done
+
+echo "done"
