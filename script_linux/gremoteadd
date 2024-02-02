@@ -1,0 +1,26 @@
+#!/bin/bash
+ME=$(basename $0)
+
+function usage() {
+    echo "Usage: ${ME} [remote name] [remote url]"
+    exit 1
+}
+
+remotename=${1}
+remoteurl=${2}
+
+if [ -z "${remotename}" ]; then
+    usage
+fi
+
+if [ -z "${remoteurl}" ]; then
+    usage
+fi
+
+echo "git remote add ${remotename} ${remoteurl}"
+git remote add ${remotename} ${remoteurl} || exit 1
+
+echo
+
+echo "git remote -v"
+git remote -v || exit 1

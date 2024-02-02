@@ -8,11 +8,14 @@ function usage() {
 
 remotename=${1}
 
-if [ -z "${1}" ]; then
+if [ -z "${remotename}" ]; then
     usage
 fi
 
 echo "git remote remove ${remotename}"
 git remote remove ${remotename} || exit 1
 
-echo "done"
+echo
+
+echo "git remote -v"
+git remote -v || exit 1
