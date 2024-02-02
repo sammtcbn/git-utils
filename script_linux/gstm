@@ -1,0 +1,3 @@
+#!/bin/bash
+# show all modified files
+git ls-files -m
