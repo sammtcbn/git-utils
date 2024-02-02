@@ -1,0 +1,18 @@
+#!/bin/bash
+ME=$(basename $0)
+
+function usage() {
+    echo "Usage: ${ME} [remote name]"
+    exit 1
+}
+
+remotename=${1}
+
+if [ -z "${1}" ]; then
+    usage
+fi
+
+echo "git remote remove ${remotename}"
+git remote remove ${remotename} || exit 1
+
+echo "done"
