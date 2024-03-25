@@ -1,4 +1,13 @@
 #!/bin/bash
-git add -A || exit 1
-git commit -m "update notes" || exit 1
+file=${1}
+
+if [ -z "${file}" ]; then
+    git add -A || exit 1
+else
+    for f in $@; do
+        git add $f
+    done
+fi
+
+git commit -m "update" || exit 1
 git push || exit 1
