@@ -9,7 +9,7 @@ GIT_EMAIL=
 
 function usage() {
     echo "Usage:"
-    echo "  ${ME} [git_repository_url]"
+    echo "  ${ME} [git_repository_url] <path>"
     echo "Example:"
     echo "  ${ME} https://github.com/torvalds/linux.git"
     exit 1
@@ -32,6 +32,13 @@ function load_config()
 function gc()
 {
     url=$1
+    local foldername=
+
+    if [ ! -z "$2" ]; then
+        foldername=$2
+    else
+        foldername=$(basename "$url" ".${url##*.}")
+    fi
 
     if [ -n "$GIT_ID" ] && [ -n "$GIT_PW" ]; then
         userpass=${GIT_ID}:${GIT_PW}
@@ -43,28 +50,27 @@ function gc()
         finalurl=$url
     fi
 
-    project=$(basename "$url" ".${url##*.}")
+    #project=$(basename "$url" ".${url##*.}")
 
     #echo "finalurl - ${finalurl}"
-    #echo "project - ${project}"
 
-    echo ${project}.git ...
+    echo ${foldername} ...
 
-    if [ ! -d "${TOPDIR}/${project}" ]; then
+    if [ ! -d "${TOPDIR}/${foldername}" ]; then
         cd $TOPDIR || exit 1
-        git clone ${finalurl} || exit 1
+        git clone ${finalurl} ${foldername} || exit 1
     else
-        cd ${TOPDIR}/${project} || exit 1
+        cd ${TOPDIR}/${foldername} || exit 1
         git pull || exit 1
     fi
 
     if [ -n "$GIT_NAME" ]; then
-        cd ${TOPDIR}/${project} || exit 1
+        cd ${TOPDIR}/${foldername} || exit 1
         git config user.name "${GIT_NAME}" || exit 1
     fi
 
     if [ -n "$GIT_EMAIL" ]; then
-        cd ${TOPDIR}/${project} || exit 1
+        cd ${TOPDIR}/${foldername} || exit 1
         git config user.email "${GIT_EMAIL}" || exit 1
     fi
 }
@@ -74,6 +80,7 @@ if [ -z "${1}" ]; then
 fi
 
 url=${1}
+foldername=${2}
 
 doname=$(echo $url | sed -e "s/[^/]*\/\/\([^@]*@\)\?\([^:/]*\).*/\2/")
 configfile=~/.config/.$doname
@@ -82,4 +89,4 @@ configfile=~/.config/.$doname
 #echo "configfile - $configfile"
 
 load_config
-gc $url
+gc $url ${foldername}
