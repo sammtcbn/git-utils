@@ -6,6 +6,51 @@ function usage() {
     exit 1
 }
 
+function check_remote_branch_exists() {
+    local branch_name=$1
+
+    if git ls-remote --heads origin "$branch_name" | grep -q "refs/heads/$branch_name"; then
+        #echo "Remote branch '$branch_name' exists"
+        return 0
+    else
+        #echo "Remote branch '$branch_name' does not exist"
+        return 1
+    fi
+}
+
+function check_local_branch_exists() {
+    local branch_name=$1
+
+    if git show-ref --verify --quiet "refs/heads/$branch_name"; then
+        #echo "Local branch '$branch_name' exists"
+        return 0
+    else
+        #echo "Local branch '$branch_name' does not exist"
+        return 1
+    fi
+}
+
+function example()
+{
+    #local_branch_to_check="mylocalbranch"
+    local_branch_to_check="HETA-1189"
+    check_local_branch_exists "$local_branch_to_check"
+    if [ $? -eq 0 ]; then
+        echo "The local branch '$local_branch_to_check' exists."
+    else
+        echo "The local branch '$local_branch_to_check' does not exist."
+    fi
+
+    remote_branch_to_check="mybranch"
+    remote_branch_to_check="mybranch"
+    check_remote_branch_exists "$remote_branch_to_check"
+    if [ $? -eq 0 ]; then
+      echo "The remote branch '$remote_branch_to_check' exists on the remote."
+    else
+      echo "The remote branch '$remote_branch_to_check' does not exist on the remote."
+    fi
+}
+
 branchname=${1}
 
 if [ -z "${1}" ]; then
@@ -17,11 +62,23 @@ fi
 echo "git checkout master"
 git checkout master || exit 1
 
-echo "git branch -d ${branchname}"
-git branch -d ${branchname} || exit 1
+check_local_branch_exists "$branchname"
+if [ $? -eq 0 ]; then
+    echo "The local branch '$branchname' exists."
+    echo "git branch -d ${branchname}"
+    git branch -d ${branchname} || exit 1
+else
+    echo "The local branch '$branchname' does not exist."
+fi
 
-echo "git push origin --delete ${branchname}"
-git push origin --delete ${branchname} || exit 1
+check_remote_branch_exists "$branchname"
+if [ $? -eq 0 ]; then
+    echo "The remote branch '$branchname' exists."
+    echo "git push origin --delete ${branchname}"
+    git push origin --delete ${branchname} || exit 1
+else
+    echo "The remote branch '$branchname' does not exist."
+fi
 
 git branch -l
 
