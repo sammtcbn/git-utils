@@ -1,0 +1,15 @@
+#!/bin/bash
+ME=$(basename $0)
+
+function usage() {
+    echo "Usage: ${ME} [author]"
+    exit 1
+}
+
+str=${1}
+
+if [ -z "${1}" ]; then
+    usage
+fi
+
+git log --author="${str}" --pretty=format:"%h %ad | %s%d [%an]" --date=short || exit 1
