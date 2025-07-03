@@ -1,0 +1,7 @@
+#!/bin/bash
+# Show a clean and focused git status output, excluding deleted files
+# - Uses `git status --porcelain` for a machine-friendly, minimal output format
+# - Filters out both staged (lines starting with 'D') and unstaged deletions (lines starting with ' D')
+# - Keeps only added, modified, and untracked files visible
+# - Useful when many files are deleted and you want to focus on existing changes
+git status --porcelain | grep -Ev '^ D|^D'
