@@ -1,0 +1,1 @@
+git config --global --get-all safe.directory
