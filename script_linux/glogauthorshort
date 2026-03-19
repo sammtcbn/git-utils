@@ -12,4 +12,4 @@ if [ -z "${1}" ]; then
     usage
 fi
 
-git log --author="${str}" --pretty=format:"%h %ad | %s%d [%an]" --date=short || exit 1
+git log -i --author="${str}" --pretty=format:"%ad %h [%an] | %s%d" --date=short || exit 1

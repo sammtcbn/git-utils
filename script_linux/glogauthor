@@ -12,4 +12,4 @@ if [ -z "${1}" ]; then
     usage
 fi
 
-git log --author="${str}" || exit 1
+git log -i --author="${str}" || exit 1

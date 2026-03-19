@@ -2,7 +2,7 @@
 
 if "%~1"=="" goto usage
 
-git log --author="%1"
+git log -i --author="%1"
 
 exit /b
 
