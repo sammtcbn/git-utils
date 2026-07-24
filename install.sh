@@ -1,10 +1,12 @@
 #!/bin/bash
-ME=$(basename $0)
+ME=$(basename "$0")
 
-ip=
-id=
-pw=
-destpath=
+ip=""
+userid=""
+pw=""
+destpath=""
+
+sshparameter="-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
 
 function interactive_question ()
 {
@@ -19,8 +21,8 @@ function interactive_question ()
     if [ -z "${ip}" ]; then
         ip=localhost
     else
-        read -p "login id: " id
-        if [ -z "${id}" ]; then
+        read -p "login id: " userid
+        if [ -z "${userid}" ]; then
             exit 1
         fi
         printf "login password: "
@@ -35,7 +37,7 @@ function interactive_question ()
     if [ "${ip}" == "localhost" ]; then
         destpath=~/bin
     else
-        destpath=/home/${id}/bin
+        destpath=/home/${userid}/bin
     fi
 
     read -p "install path ? [${destpath}] " tmppath
@@ -47,7 +49,7 @@ function interactive_question ()
     if [ "${ip}" == "localhost" ]; then
         read -p "Are you sure you want to install to ${destpath} ? [y/N] " ins
     else
-        read -p "Are you sure you want to install to ${id}@${ip}:${destpath} ? [y/N] " ins
+        read -p "Are you sure you want to install to ${userid}@${ip}:${destpath} ? [y/N] " ins
     fi
 
     if [ "${ins}" != "y" ] && [ "${ins}" != "Y" ]; then
@@ -57,7 +59,7 @@ function interactive_question ()
 
 function cmd_exists ()
 {
-    if ! type $1> /dev/null 2>&1; then
+    if ! type "$1" > /dev/null 2>&1; then
         return 1
     else
         return 0
@@ -66,10 +68,10 @@ function cmd_exists ()
 
 function remote_exec ()
 {
-    if cmd_exists sshpass ; then
-        sshpass -p ${pw} ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${id}@${ip} ${@}
+    if cmd_exists sshpass && [[ -n "${pw}" ]]; then
+        sshpass -p "${pw}" ssh ${sshparameter} "${userid}@${ip}" "$@"
     else
-        ssh ${id}@${ip} ${@}
+        ssh ${sshparameter} "${userid}@${ip}" "${@}"
     fi
 }
 
@@ -80,26 +82,31 @@ function install_to_local ()
     cp -rf ${src}/* ${destpath} || exit 1
 }
 
-
 function install_to_remote ()
 {
-    local src=$1
-    remote_exec mkdir -p ${destpath}
+    local src="$1"
+
+    if [[ ! -e "${src}" ]]; then
+        echo "Error: ${src} not found!"
+        exit 1
+    fi
+
+    remote_exec mkdir -p "${destpath}"
 
     for f in ${src}/*; do
         echo ${f}
 
         if [[ -d ${f} ]]; then
             if cmd_exists sshpass ; then
-                sshpass -p ${pw} scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -r $f ${id}@${ip}:${destpath}
+                sshpass -p ${pw} scp ${sshparameter} -r $f ${userid}@${ip}:${destpath}
             else
-                scp -r $f ${id}@${ip}:${destpath}
+                scp -r $f ${userid}@${ip}:${destpath}
             fi
         elif [[ -f ${f} ]]; then
             if cmd_exists sshpass ; then
-                sshpass -p ${pw} scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $f ${id}@${ip}:${destpath}
+                sshpass -p ${pw} scp ${sshparameter} $f ${userid}@${ip}:${destpath}
             else
-                scp $f ${id}@${ip}:${destpath}
+                scp $f ${userid}@${ip}:${destpath}
             fi
         else
             echo "$f not found"
@@ -116,12 +123,12 @@ if [ $# -eq 1 ]; then
     fi
 elif [ $# -eq 3 ]; then
     ip=${1}
-    id=${2}
+    userid=${2}
     pw=${3}
-    destpath=/home/${id}/bin
+    destpath=/home/${userid}/bin
 elif [ $# -eq 4 ]; then
     ip=${1}
-    id=${2}
+    userid=${2}
     pw=${3}
     destpath=${4}
 else
@@ -136,7 +143,7 @@ if [ "${ip}" == "localhost" ]; then
     git config --global color.branch auto
     git config --global color.log auto
 else
-    echo install to ${id}@${ip}:${destpath} ...
+    echo install to ${userid}@${ip}:${destpath} ...
     install_to_remote script_linux
     remote_exec git config --global color.diff auto
     remote_exec git config --global color.status auto
@@ -144,4 +151,4 @@ else
     remote_exec git config --global color.log auto
 fi
 
-echo "done"
+echo "Done!"
