@@ -43,7 +43,7 @@ function interactive_question ()
     read -p "install path ? [${destpath}] " tmppath
 
     if [ ! -z "${tmppath}" ]; then
-        destpath=tmppath
+        destpath=${tmppath}
     fi
 
     if [ "${ip}" == "localhost" ]; then
@@ -78,8 +78,8 @@ function remote_exec ()
 function install_to_local ()
 {
     local src=$1
-    mkdir -p ${destpath} || exit 1
-    cp -rf ${src}/* ${destpath} || exit 1
+    mkdir -p "${destpath}" || exit 1
+    cp -rf ${src}/* "${destpath}" || exit 1
 }
 
 function install_to_remote ()
@@ -100,13 +100,13 @@ function install_to_remote ()
             if cmd_exists sshpass ; then
                 sshpass -p ${pw} scp ${sshparameter} -r $f ${userid}@${ip}:${destpath}
             else
-                scp -r $f ${userid}@${ip}:${destpath}
+                scp ${sshparameter} -r $f ${userid}@${ip}:${destpath}
             fi
         elif [[ -f ${f} ]]; then
             if cmd_exists sshpass ; then
                 sshpass -p ${pw} scp ${sshparameter} $f ${userid}@${ip}:${destpath}
             else
-                scp $f ${userid}@${ip}:${destpath}
+                scp ${sshparameter} $f ${userid}@${ip}:${destpath}
             fi
         else
             echo "$f not found"
