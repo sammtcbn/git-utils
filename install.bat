@@ -5,7 +5,7 @@
 
 @rem below method works if files are in WSL too.
 @set currdir=%~dp0
-@xcopy /Y %currdir%\script_win\*.* C:\Users\%UserName%\AppData\Local\Microsoft\WindowsApps
+@xcopy /Y %currdir%\script_win\*.* %LocalAppData%\Microsoft\WindowsApps
 
 git config --global color.diff auto
 git config --global color.status auto
